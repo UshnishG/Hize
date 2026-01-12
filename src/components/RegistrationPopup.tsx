@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useCallback, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import {
   X,
@@ -9,6 +9,9 @@ import {
   MapPin,
   ExternalLink,
   Sparkles,
+  Award,
+  Users,
+  Zap,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -30,20 +33,22 @@ const overlayVariants: Variants = {
 };
 
 const modalVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.96 },
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
   visible: {
     opacity: 1,
+    y: 0,
     scale: 1,
     transition: {
-      duration: 0.3,
-      ease: [0.25, 0.1, 0.25, 1],
+      duration: 0.4,
+      ease: [0.16, 1, 0.3, 1],
     },
   },
   exit: {
     opacity: 0,
-    scale: 0.96,
+    y: 30,
+    scale: 0.95,
     transition: {
-      duration: 0.2,
+      duration: 0.3,
       ease: [0.4, 0, 1, 1],
     },
   },
@@ -54,15 +59,15 @@ const mobileSheetVariants: Variants = {
   visible: {
     y: 0,
     transition: {
-      duration: 0.4,
-      ease: [0.25, 0.1, 0.25, 1],
+      duration: 0.3,
+      ease: [0.32, 0.72, 0, 1],
     },
   },
   exit: {
     y: "100%",
     transition: {
-      duration: 0.3,
-      ease: [0.4, 0, 1, 1],
+      duration: 0.25,
+      ease: [0.32, 0.72, 0, 1],
     },
   },
 };
@@ -121,10 +126,10 @@ export default function RegistrationPopup({
     }
   };
 
-  // Detect mobile
+  // Detect mobile and tablet
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 1024);
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -150,14 +155,15 @@ export default function RegistrationPopup({
   }, [isOpen, handleKeyDown]);
 
   const handleRegisterOnKonfHub = () => {
-    window.open("hhttps://konfhub.com/checkout/high-impact-zonal-event-2026", "_blank", "noopener,noreferrer");
+    window.open("https://konfhub.com/checkout/high-impact-zonal-event-2026", "_blank", "noopener,noreferrer");
   };
 
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      <motion.div
+    <LazyMotion features={domAnimation} strict>
+    <AnimatePresence mode="wait">
+      <m.div
         role="dialog"
         aria-modal="true"
         aria-labelledby="registration-title"
@@ -165,149 +171,280 @@ export default function RegistrationPopup({
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm px-4"
+        className="fixed inset-0 z-[100] flex items-end lg:items-center justify-center bg-black/90 backdrop-blur-sm overflow-hidden"
         onClick={onClose}
       >
-        {/* Desktop Modal */}
+        {/* Desktop & Tablet Modal */}
         {!isMobile && (
-          <motion.div
+          <m.div
             variants={modalVariants}
-            className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl bg-black border border-[#FACC15]/30 shadow-2xl"
+            className="relative w-full max-w-6xl mx-4 max-h-[90vh] overflow-hidden rounded-3xl bg-gradient-to-br from-zinc-950 to-black border border-[#FACC15]/40 shadow-[0_0_80px_rgba(250,204,21,0.15)] backdrop-blur-xl flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Animated Border Glow */}
+            <div className="absolute inset-0 rounded-3xl pointer-events-none overflow-hidden">
+              <m.div
+                className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[#FACC15] via-[#F97316] to-[#FACC15] opacity-20 blur-xl"
+                animate={{
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                style={{ backgroundSize: "200% 100%" }}
+              />
+            </div>
+
             {/* Close Button */}
             <button
               onClick={onClose}
               aria-label="Close registration modal"
-              className="absolute right-4 top-4 z-10 rounded-full bg-black/80 border border-[#FACC15]/30 p-2 text-white hover:bg-[#FACC15]/10 hover:border-[#FACC15]/50 transition-all"
+              className="absolute right-4 top-4 z-30 rounded-full bg-gradient-to-br from-zinc-900/90 to-black/90 border-2 border-[#FACC15]/50 p-2.5 text-white hover:bg-[#FACC15]/20 hover:border-[#FACC15] hover:scale-110 transition-all duration-300 shadow-lg shadow-[#FACC15]/20 backdrop-blur-md group"
             >
-              <X className="h-5 w-5" />
+              <X className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
             </button>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
+            <div className="grid grid-cols-1 lg:grid-cols-2 flex-1 min-h-0 relative z-10 overflow-hidden">
               {/* Left Panel - Visual */}
-              <div className="relative bg-black p-8 lg:p-12 flex flex-col justify-between overflow-hidden">
-                {/* Gradient Glow Background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#FACC15]/20 via-[#F97316]/10 to-transparent opacity-50" />
-                <div className="absolute top-0 right-0 w-96 h-96 bg-[#FACC15]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#F97316]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+              <div className="relative bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 lg:p-6 flex flex-col justify-between overflow-hidden min-h-0">
+                {/* Animated Background Gradients */}
+                <div className="absolute inset-0">
+                  <m.div
+                    className="absolute top-0 right-0 w-96 h-96 bg-[#FACC15]/20 rounded-full blur-[100px]"
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0.2, 0.3, 0.2],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  <m.div
+                    className="absolute bottom-0 left-0 w-96 h-96 bg-[#F97316]/20 rounded-full blur-[100px]"
+                    animate={{
+                      scale: [1.2, 1, 1.2],
+                      opacity: [0.2, 0.3, 0.2],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 1,
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(250,204,21,0.05),transparent_70%)]" />
+                </div>
 
-                <div className="relative z-10">
-                  {/* Logo */}
-                  <div className="mb-8">
-                    <Image
-                      src="/logo_white.png"
-                      alt="HIZE Logo"
-                      width={120}
-                      height={40}
-                      className="h-10 w-auto"
-                    />
-                  </div>
-
-                  {/* Tagline */}
-                  <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-                    High Impact.
-                    <br />
-                    <span className="bg-gradient-to-r from-[#FACC15] to-[#F97316] bg-clip-text text-transparent">
-                      Real Innovation.
-                    </span>
-                  </h2>
-
-                  {/* Event Info */}
-                  <div className="space-y-4 mt-8">
-                    <div className="flex items-center gap-3 text-gray-300">
-                      <Calendar className="h-5 w-5 text-[#FACC15]" />
-                      <span className="text-lg">January 2026</span>
+                <div className="relative z-10 space-y-4">
+                  {/* Logo with Glow */}
+                  <m.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="mb-4"
+                  >
+                    <div className="relative inline-block">
+                      <div className="absolute inset-0 bg-[#FACC15]/20 blur-xl rounded-full" />
+                      <Image
+                        src="/logo_white.png"
+                        alt="HIZE Logo"
+                        width={140}
+                        height={47}
+                        className="h-10 lg:h-12 w-auto relative"
+                        priority
+                      />
                     </div>
-                    <div className="flex items-center gap-3 text-gray-300">
-                      <MapPin className="h-5 w-5 text-[#FACC15]" />
-                      <span className="text-lg">SRM IST</span>
-                    </div>
+                  </m.div>
+
+                  {/* Tagline with Animation */}
+                  <m.div
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <h2 className="text-2xl lg:text-3xl xl:text-4xl font-black text-white mb-2 leading-tight tracking-tight">
+                      High Impact.
+                      <br />
+                      <span className="relative inline-block">
+                        <span className="absolute inset-0 bg-gradient-to-r from-[#FACC15] via-[#F59E0B] to-[#F97316] blur-lg opacity-50" />
+                        <span className="relative bg-gradient-to-r from-[#FACC15] via-[#F59E0B] to-[#F97316] bg-clip-text text-transparent">
+                          Real Innovation.
+                        </span>
+                      </span>
+                    </h2>
+                    <p className="text-gray-400 text-xs lg:text-sm mt-2">
+                      Join India's premier tech event bringing together innovators, creators, and industry leaders
+                    </p>
+                  </m.div>
+
+                  {/* Event Details Cards */}
+                  <div className="space-y-3">
+                    <m.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors group"
+                    >
+                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-[#FACC15] to-[#F97316] shadow-lg shadow-[#FACC15]/30">
+                        <Calendar className="h-5 w-5 text-black" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 font-medium">Event Dates</p>
+                        <p className="text-white font-semibold">Jan 29th - Jan 31st, 2026</p>
+                      </div>
+                    </m.div>
+
+                    <m.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors group"
+                    >
+                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-[#F97316] to-[#F59E0B] shadow-lg shadow-[#F97316]/30">
+                        <MapPin className="h-5 w-5 text-black" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 font-medium">Venue</p>
+                        <p className="text-white font-semibold">SRM IST, Chennai</p>
+                      </div>
+                    </m.div>
+
+                    <m.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.6 }}
+                      className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors group"
+                    >
+                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-[#FACC15] to-[#F97316] shadow-lg shadow-[#FACC15]/30">
+                        <Users className="h-5 w-5 text-black" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-400 font-medium">Expected Attendees</p>
+                        <p className="text-white font-semibold">500+ Innovators</p>
+                      </div>
+                    </m.div>
                   </div>
                 </div>
 
-                {/* Decorative Elements */}
-                <div className="relative z-10 mt-auto">
+                {/* Bottom Decorative Bar */}
+                <m.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                  className="relative z-10 mt-auto space-y-3"
+                >
                   <div className="flex gap-2">
                     {[...Array(3)].map((_, i) => (
-                      <div
+                      <m.div
                         key={i}
-                        className="h-1 flex-1 bg-gradient-to-r from-[#FACC15] to-[#F97316] rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: "100%" }}
+                        transition={{ delay: 0.8 + i * 0.1, duration: 0.5 }}
+                        className="h-1.5 flex-1 bg-gradient-to-r from-[#FACC15] to-[#F97316] rounded-full shadow-lg shadow-[#FACC15]/30"
                       />
                     ))}
                   </div>
-                </div>
+                  <p className="text-xs text-gray-500 text-center">
+                    Powered by IEEE Computer Society SYP
+                  </p>
+                </m.div>
               </div>
 
-              {/* Right Panel - Tickets Showcase */}
-              <div className="bg-[#0B0B0B] p-8 lg:p-12 flex flex-col overflow-y-auto">
+              {/* Right Panel - Registration Form */}
+              <div className="bg-gradient-to-br from-zinc-950 to-black p-4 lg:p-6 flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-[#FACC15]/30 scrollbar-track-transparent min-h-0">
                 {/* Header */}
-                <div className="mb-8">
-                  <h3
+                <div className="mb-4">
+                  <m.h3
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
                     id="registration-title"
-                    className="text-3xl font-bold text-[#FACC15] mb-2"
+                    className="text-xl lg:text-2xl font-black bg-gradient-to-r from-[#FACC15] via-[#F59E0B] to-[#F97316] bg-clip-text text-transparent mb-1"
                   >
                     Event Registration
-                  </h3>
-                  <p className="text-gray-400 text-sm">
-                    Jan 6 - Jan 28, 2026 • Configure your registration
-                  </p>
+                  </m.h3>
+                  <m.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    className="text-gray-400 text-xs lg:text-sm flex items-center gap-2"
+                  >
+                    <span className="inline-block w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                    Jan 29th - Jan 31st, 2026 • Configure your registration
+                  </m.p>
                 </div>
 
                 {/* Registration Form */}
-                <div className="space-y-6 mb-8">
+                <div className="space-y-3 mb-4">
                   {/* Goodies Toggle */}
-                  <motion.div
+                  <m.div
                     variants={cardVariants}
                     initial="hidden"
                     animate="visible"
-                    className="p-4 rounded-xl border border-[#FACC15]/30 bg-black/50"
+                    className="group relative p-4 lg:p-5 rounded-xl border border-[#FACC15]/30 bg-gradient-to-br from-black/50 to-zinc-900/30 hover:border-[#FACC15]/60 hover:bg-gradient-to-br hover:from-black/70 hover:to-zinc-900/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#FACC15]/10"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Sparkles className="h-5 w-5 text-[#FACC15]" />
-                        <div>
-                          <span className="text-white font-semibold block">
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#FACC15]/5 via-transparent to-[#F97316]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="flex items-center justify-between gap-4 relative z-10">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-[#FACC15]/20 to-[#F97316]/20 border border-[#FACC15]/30">
+                          <Sparkles className="h-5 w-5 text-[#FACC15]" />
+                        </div>
+                        <div className="min-w-0">
+                          <span className="text-white font-bold block text-sm lg:text-base">
                             Include Goodies
                           </span>
-                          <span className="text-gray-400 text-sm">
-                            Event swag & exclusive merchandise (+₹400)
+                          <span className="text-gray-400 text-xs lg:text-sm">
+                            Event swag & merchandise{" "}
+                            <span className="text-[#FACC15] font-semibold">+₹400</span>
                           </span>
                         </div>
                       </div>
                       <button
                         onClick={() => setIncludeGoodies(!includeGoodies)}
-                        className={`relative w-14 h-7 rounded-full transition-all ${includeGoodies
-                          ? "bg-gradient-to-r from-[#FACC15] to-[#F97316]"
-                          : "bg-gray-700"
-                          }`}
+                        className={`relative w-14 lg:w-16 h-7 lg:h-8 rounded-full transition-all flex-shrink-0 shadow-lg ${
+                          includeGoodies
+                            ? "bg-gradient-to-r from-[#FACC15] to-[#F97316] shadow-[#FACC15]/50"
+                            : "bg-gray-700 hover:bg-gray-600"
+                        }`}
                         aria-label="Toggle goodies"
                       >
-                        <div
-                          className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${includeGoodies ? "translate-x-7" : "translate-x-0"
-                            }`}
+                        <m.div
+                          animate={{
+                            x: includeGoodies ? 28 : 2,
+                          }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 30,
+                          }}
+                          className="absolute top-1 w-5 lg:w-6 h-5 lg:h-6 bg-white rounded-full shadow-md"
                         />
                       </button>
                     </div>
-                  </motion.div>
+                  </m.div>
 
                   {/* IEEE Member Toggle */}
-                  <motion.div
+                  <m.div
                     variants={cardVariants}
                     initial="hidden"
                     animate="visible"
-                    className="p-4 rounded-xl border border-[#FACC15]/30 bg-black/50"
+                    className="group relative p-4 lg:p-5 rounded-xl border border-[#FACC15]/30 bg-gradient-to-br from-black/50 to-zinc-900/30 hover:border-[#FACC15]/60 hover:bg-gradient-to-br hover:from-black/70 hover:to-zinc-900/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#FACC15]/10"
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="h-5 w-5 rounded bg-blue-500 flex items-center justify-center">
-                          <span className="text-white text-xs font-bold">IEEE</span>
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#FACC15]/5 via-transparent to-[#F97316]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="flex items-center justify-between gap-4 mb-3 relative z-10">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30">
+                          <Award className="h-5 w-5 text-white" />
                         </div>
-                        <div>
-                          <span className="text-white font-semibold block">
+                        <div className="min-w-0">
+                          <span className="text-white font-bold block text-sm lg:text-base">
                             IEEE Member
                           </span>
-                          <span className="text-gray-400 text-sm">
+                          <span className="text-gray-400 text-xs lg:text-sm">
                             Are you an IEEE member?
                           </span>
                         </div>
@@ -317,170 +454,203 @@ export default function RegistrationPopup({
                           setIsIEEEMember(!isIEEEMember);
                           if (!isIEEEMember) setIeeeNumber("");
                         }}
-                        className={`relative w-14 h-7 rounded-full transition-all ${isIEEEMember
-                          ? "bg-gradient-to-r from-[#FACC15] to-[#F97316]"
-                          : "bg-gray-700"
-                          }`}
+                        className={`relative w-14 lg:w-16 h-7 lg:h-8 rounded-full transition-all flex-shrink-0 shadow-lg ${
+                          isIEEEMember
+                            ? "bg-gradient-to-r from-[#FACC15] to-[#F97316] shadow-[#FACC15]/50"
+                            : "bg-gray-700 hover:bg-gray-600"
+                        }`}
                         aria-label="Toggle IEEE membership"
                       >
-                        <div
-                          className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${isIEEEMember ? "translate-x-7" : "translate-x-0"
-                            }`}
+                        <m.div
+                          animate={{
+                            x: isIEEEMember ? 28 : 2,
+                          }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 30,
+                          }}
+                          className="absolute top-1 w-5 lg:w-6 h-5 lg:h-6 bg-white rounded-full shadow-md"
                         />
                       </button>
                     </div>
-                    
-                    {/* IEEE Number Input */}
-                    {isIEEEMember && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="mt-3"
-                      >
-                        <input
-                          type="text"
-                          placeholder="Enter IEEE Member Number"
-                          value={ieeeNumber}
-                          onChange={(e) => setIeeeNumber(e.target.value)}
-                          className="w-full px-3 py-2 bg-black/70 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#FACC15] focus:outline-none transition-colors"
-                        />
-                      </motion.div>
-                    )}
-                  </motion.div>
+                  </m.div>
 
                   {/* SRM Student Toggle */}
-                  <motion.div
+                  <m.div
                     variants={cardVariants}
                     initial="hidden"
                     animate="visible"
-                    className="p-4 rounded-xl border border-[#FACC15]/30 bg-black/50"
+                    className="group relative p-4 lg:p-5 rounded-xl border border-[#FACC15]/30 bg-gradient-to-br from-black/50 to-zinc-900/30 hover:border-[#FACC15]/60 hover:bg-gradient-to-br hover:from-black/70 hover:to-zinc-900/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#FACC15]/10"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="h-5 w-5 rounded bg-green-500 flex items-center justify-center">
-                          <span className="text-white text-xs font-bold">SRM</span>
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#FACC15]/5 via-transparent to-[#F97316]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="flex items-center justify-between gap-4 relative z-10">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 shadow-lg shadow-green-500/30">
+                          <Zap className="h-5 w-5 text-white" />
                         </div>
-                        <div>
-                          <span className="text-white font-semibold block">
+                        <div className="min-w-0">
+                          <span className="text-white font-bold block text-sm lg:text-base">
                             SRM Student
                           </span>
-                          <span className="text-gray-400 text-sm">
+                          <span className="text-gray-400 text-xs lg:text-sm">
                             Are you a SRM student?
                           </span>
                         </div>
                       </div>
                       <button
                         onClick={() => setIsSRMStudent(!isSRMStudent)}
-                        className={`relative w-14 h-7 rounded-full transition-all ${isSRMStudent
-                          ? "bg-gradient-to-r from-[#FACC15] to-[#F97316]"
-                          : "bg-gray-700"
-                          }`}
+                        className={`relative w-14 lg:w-16 h-7 lg:h-8 rounded-full transition-all flex-shrink-0 shadow-lg ${
+                          isSRMStudent
+                            ? "bg-gradient-to-r from-[#FACC15] to-[#F97316] shadow-[#FACC15]/50"
+                            : "bg-gray-700 hover:bg-gray-600"
+                        }`}
                         aria-label="Toggle SRM student status"
                       >
-                        <div
-                          className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${isSRMStudent ? "translate-x-7" : "translate-x-0"
-                            }`}
+                        <m.div
+                          animate={{
+                            x: isSRMStudent ? 28 : 2,
+                          }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 30,
+                          }}
+                          className="absolute top-1 w-5 lg:w-6 h-5 lg:h-6 bg-white rounded-full shadow-md"
                         />
                       </button>
                     </div>
-                  </motion.div>
+                  </m.div>
                 </div>
 
                 {/* Price Summary */}
-                <div className="mb-8">
-                  <div className="p-6 rounded-xl border-2 border-[#FACC15]/50 bg-gradient-to-br from-[#FACC15]/10 to-[#F97316]/5">
-                    <div className="text-center">
-                      <h4 className="text-white font-semibold text-lg mb-2">
+                <div className="mb-4">
+                  <m.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="relative p-4 lg:p-5 rounded-2xl border-2 border-[#FACC15]/50 bg-gradient-to-br from-[#FACC15]/10 via-[#F97316]/5 to-transparent overflow-hidden"
+                  >
+                    {/* Animated Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#FACC15]/10 via-[#F97316]/10 to-[#FACC15]/10 animate-pulse" />
+                    
+                    <div className="relative z-10 text-center">
+                      <h4 className="text-white font-black text-base lg:text-lg mb-2 tracking-wide">
                         {getPriceLabel()}
                       </h4>
-                      <div className="space-y-2 text-sm text-gray-300 mb-4">
-                        <div className="flex justify-between">
-                          <span>Base Price:</span>
-                          <span>₹{calculatePrice() - (includeGoodies ? 400 : 0)}</span>
+                      <div className="space-y-2 text-sm text-gray-300 mb-3">
+                        <div className="flex justify-between items-center py-2 border-b border-white/10">
+                          <span className="font-medium">Base Price:</span>
+                          <span className="font-bold text-white">₹{calculatePrice() - (includeGoodies ? 400 : 0)}</span>
                         </div>
                         {includeGoodies && (
-                          <div className="flex justify-between">
-                            <span>Goodies:</span>
-                            <span>+₹400</span>
-                          </div>
+                          <m.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="flex justify-between items-center py-2 border-b border-white/10"
+                          >
+                            <span className="font-medium flex items-center gap-2">
+                              <Sparkles className="h-4 w-4 text-[#FACC15]" />
+                              Goodies:
+                            </span>
+                            <span className="font-bold text-[#F97316]">+₹400</span>
+                          </m.div>
                         )}
-                        <div className="border-t border-gray-600 pt-2 flex justify-between font-bold text-lg">
-                          <span className="text-white">Total:</span>
-                          <span className="text-[#FACC15]">₹{calculatePrice()}</span>
+                        <div className="pt-2 flex justify-between items-center">
+                          <span className="text-base lg:text-lg font-black text-white">Total Amount:</span>
+                          <m.span
+                            key={calculatePrice()}
+                            initial={{ scale: 1.5, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="text-xl lg:text-2xl font-black bg-gradient-to-r from-[#FACC15] via-[#F59E0B] to-[#F97316] bg-clip-text text-transparent"
+                          >
+                            ₹{calculatePrice()}
+                          </m.span>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </m.div>
                 </div>
 
                 {/* Register Button */}
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  whileHover={{ scale: 1.02 }}
+                <m.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleRegisterOnKonfHub}
-                  className="w-full py-4 rounded-xl font-bold text-lg bg-gradient-to-r from-[#FACC15] to-[#F97316] text-black hover:shadow-lg hover:shadow-[#F97316]/50 transition-all"
+                  className="relative w-full py-3 lg:py-4 rounded-xl font-black text-sm lg:text-base bg-gradient-to-r from-[#FACC15] via-[#F59E0B] to-[#F97316] text-black hover:shadow-2xl hover:shadow-[#F97316]/50 transition-all group overflow-hidden flex items-center justify-center"
                 >
-                  Register on KonfHub
-                  <ExternalLink className="inline-block ml-2 h-5 w-5" />
-                </motion.button>
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    Register on KonfHub
+                    <ExternalLink className="h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#F97316] via-[#F59E0B] to-[#FACC15] opacity-0 group-hover:opacity-100 transition-opacity" />
+                </m.button>
 
-                <p className="text-center text-gray-500 text-xs mt-2">
+                <m.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.7 }}
+                  className="text-center text-gray-500 text-xs lg:text-sm mt-3 flex items-center justify-center gap-1"
+                >
+                  <span className="inline-block w-1.5 h-1.5 bg-green-500 rounded-full" />
                   Redirects to KonfHub for secure registration
-                </p>
+                </m.p>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
 
         {/* Mobile Bottom Sheet */}
         {isMobile && (
           <>
-            <motion.div
+            <m.div
               variants={overlayVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="fixed inset-0 bg-black/80 -z-10"
+              className="fixed inset-0 bg-black/85 -z-10"
               onClick={onClose}
             />
-            <motion.div
+            <m.div
               variants={mobileSheetVariants}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-[#0B0B0B] border-t-2 border-[#FACC15]/30 rounded-t-3xl shadow-2xl max-h-[85vh] overflow-y-auto overscroll-contain"
+              className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-b from-zinc-900 via-zinc-950 to-black border-t-2 border-[#FACC15]/50 rounded-t-3xl shadow-[0_-10px_80px_rgba(250,204,21,0.2)] max-h-[92vh] overflow-y-auto overscroll-contain"
               onClick={(e) => e.stopPropagation()}
+              style={{ touchAction: "pan-y" }}
             >
               {/* Drag Handle */}
-              <div className="flex justify-center pt-3 pb-2">
-                <div className="w-12 h-1.5 bg-gray-600 rounded-full" />
+              <div className="sticky top-0 z-10 flex justify-center pt-3 pb-2 bg-gradient-to-b from-zinc-900 to-transparent">
+                <div className="w-12 h-1.5 bg-gradient-to-r from-[#FACC15] to-[#F97316] rounded-full shadow-lg shadow-[#FACC15]/30" />
               </div>
 
               {/* Close Button */}
               <button
                 onClick={onClose}
                 aria-label="Close registration modal"
-                className="absolute right-4 top-4 rounded-full bg-black/80 border border-[#FACC15]/30 p-2 text-white"
+                className="absolute right-4 top-4 z-20 rounded-full bg-gradient-to-br from-zinc-900/90 to-black/90 border-2 border-[#FACC15]/50 p-2.5 text-white backdrop-blur-sm shadow-lg active:scale-95 transition-all"
               >
                 <X className="h-5 w-5" />
               </button>
 
               {/* Content */}
-              <div className="p-4 pb-8 safe-area-inset-bottom">
+              <div className="px-4 pb-8 pt-2 safe-area-inset-bottom">
                 {/* Header */}
                 <div className="mb-6 text-center">
-                  <h3 className="text-2xl font-bold text-[#FACC15] mb-2">
+                  <h3 className="text-2xl font-black bg-gradient-to-r from-[#FACC15] via-[#F59E0B] to-[#F97316] bg-clip-text text-transparent mb-2">
                     Event Registration
                   </h3>
-                  <p className="text-gray-400 text-sm">
-                    Jan 6 - Jan 28, 2026 • Configure your registration
+                  <p className="text-gray-400 text-sm flex items-center justify-center gap-2">
+                    <span className="inline-block w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                    Jan 29th - Jan 31st, 2026
                   </p>
                   <div className="flex items-center justify-center gap-4 mt-4 text-sm text-gray-300">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg border border-white/10">
                       <Calendar className="h-4 w-4 text-[#FACC15]" />
-                      <span>January 2026</span>
+                      <span>Jan 2026</span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg border border-white/10">
                       <MapPin className="h-4 w-4 text-[#FACC15]" />
                       <span>SRM IST</span>
                     </div>
@@ -490,48 +660,52 @@ export default function RegistrationPopup({
                 {/* Registration Form */}
                 <div className="space-y-4 mb-6">
                   {/* Goodies Toggle */}
-                  <div className="p-4 rounded-xl border border-[#FACC15]/30 bg-black/50">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Sparkles className="h-5 w-5 text-[#FACC15]" />
-                        <div>
-                          <span className="text-white font-semibold text-sm block">
+                  <div className="p-4 rounded-xl border border-[#FACC15]/30 bg-gradient-to-br from-black/50 to-zinc-900/30 active:border-[#FACC15]/60 active:bg-gradient-to-br active:from-black/70 active:to-zinc-900/50 transition-all">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-[#FACC15]/20 to-[#F97316]/20 border border-[#FACC15]/30">
+                          <Sparkles className="h-4 w-4 text-[#FACC15]" />
+                        </div>
+                        <div className="min-w-0">
+                          <span className="text-white font-bold text-sm block">
                             Include Goodies
                           </span>
                           <span className="text-gray-400 text-xs">
-                            +₹400
+                            <span className="text-[#FACC15] font-semibold">+₹400</span>
                           </span>
                         </div>
                       </div>
                       <button
                         onClick={() => setIncludeGoodies(!includeGoodies)}
-                        className={`relative w-12 h-6 rounded-full transition-all touch-manipulation ${includeGoodies
-                          ? "bg-gradient-to-r from-[#FACC15] to-[#F97316]"
-                          : "bg-gray-700"
-                          }`}
+                        className={`relative w-12 h-6 rounded-full transition-all touch-manipulation flex-shrink-0 shadow-lg ${
+                          includeGoodies
+                            ? "bg-gradient-to-r from-[#FACC15] to-[#F97316] shadow-[#FACC15]/50"
+                            : "bg-gray-700"
+                        }`}
                         aria-label="Toggle goodies"
                       >
                         <div
-                          className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${includeGoodies ? "translate-x-5" : "translate-x-0"
-                            }`}
+                          className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform shadow-md ${
+                            includeGoodies ? "translate-x-6" : "translate-x-0"
+                          }`}
                         />
                       </button>
                     </div>
                   </div>
 
                   {/* IEEE Member Toggle */}
-                  <div className="p-4 rounded-xl border border-[#FACC15]/30 bg-black/50">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="h-5 w-5 rounded bg-blue-500 flex items-center justify-center">
-                          <span className="text-white text-xs font-bold">IEEE</span>
+                  <div className="p-4 rounded-xl border border-[#FACC15]/30 bg-gradient-to-br from-black/50 to-zinc-900/30 active:border-[#FACC15]/60 active:bg-gradient-to-br active:from-black/70 active:to-zinc-900/50 transition-all">
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30">
+                          <Award className="h-4 w-4 text-white" />
                         </div>
-                        <div>
-                          <span className="text-white font-semibold text-sm block">
+                        <div className="min-w-0">
+                          <span className="text-white font-bold text-sm block">
                             IEEE Member
                           </span>
                           <span className="text-gray-400 text-xs">
-                            Are you an IEEE member?
+                            IEEE member?
                           </span>
                         </div>
                       </div>
@@ -540,65 +714,51 @@ export default function RegistrationPopup({
                           setIsIEEEMember(!isIEEEMember);
                           if (!isIEEEMember) setIeeeNumber("");
                         }}
-                        className={`relative w-12 h-6 rounded-full transition-all touch-manipulation ${isIEEEMember
-                          ? "bg-gradient-to-r from-[#FACC15] to-[#F97316]"
-                          : "bg-gray-700"
-                          }`}
+                        className={`relative w-12 h-6 rounded-full transition-all touch-manipulation flex-shrink-0 shadow-lg ${
+                          isIEEEMember
+                            ? "bg-gradient-to-r from-[#FACC15] to-[#F97316] shadow-[#FACC15]/50"
+                            : "bg-gray-700"
+                        }`}
                         aria-label="Toggle IEEE membership"
                       >
                         <div
-                          className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${isIEEEMember ? "translate-x-5" : "translate-x-0"
-                            }`}
+                          className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform shadow-md ${
+                            isIEEEMember ? "translate-x-6" : "translate-x-0"
+                          }`}
                         />
                       </button>
                     </div>
-                    
-                    {/* IEEE Number Input */}
-                    {isIEEEMember && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="mt-3"
-                      >
-                        <input
-                          type="text"
-                          placeholder="Enter IEEE Member Number"
-                          value={ieeeNumber}
-                          onChange={(e) => setIeeeNumber(e.target.value)}
-                          className="w-full px-3 py-2 bg-black/70 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-[#FACC15] focus:outline-none transition-colors text-sm"
-                        />
-                      </motion.div>
-                    )}
                   </div>
 
                   {/* SRM Student Toggle */}
-                  <div className="p-4 rounded-xl border border-[#FACC15]/30 bg-black/50">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="h-5 w-5 rounded bg-green-500 flex items-center justify-center">
-                          <span className="text-white text-xs font-bold">SRM</span>
+                  <div className="p-4 rounded-xl border border-[#FACC15]/30 bg-gradient-to-br from-black/50 to-zinc-900/30 active:border-[#FACC15]/60 active:bg-gradient-to-br active:from-black/70 active:to-zinc-900/50 transition-all">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-green-500 to-green-600 shadow-lg shadow-green-500/30">
+                          <Zap className="h-4 w-4 text-white" />
                         </div>
-                        <div>
-                          <span className="text-white font-semibold text-sm block">
+                        <div className="min-w-0">
+                          <span className="text-white font-bold text-sm block">
                             SRM Student
                           </span>
                           <span className="text-gray-400 text-xs">
-                            Are you a SRM student?
+                            SRM student?
                           </span>
                         </div>
                       </div>
                       <button
                         onClick={() => setIsSRMStudent(!isSRMStudent)}
-                        className={`relative w-12 h-6 rounded-full transition-all touch-manipulation ${isSRMStudent
-                          ? "bg-gradient-to-r from-[#FACC15] to-[#F97316]"
-                          : "bg-gray-700"
-                          }`}
+                        className={`relative w-12 h-6 rounded-full transition-all touch-manipulation flex-shrink-0 shadow-lg ${
+                          isSRMStudent
+                            ? "bg-gradient-to-r from-[#FACC15] to-[#F97316] shadow-[#FACC15]/50"
+                            : "bg-gray-700"
+                        }`}
                         aria-label="Toggle SRM student status"
                       >
                         <div
-                          className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${isSRMStudent ? "translate-x-5" : "translate-x-0"
-                            }`}
+                          className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform shadow-md ${
+                            isSRMStudent ? "translate-x-6" : "translate-x-0"
+                          }`}
                         />
                       </button>
                     </div>
@@ -607,25 +767,33 @@ export default function RegistrationPopup({
 
                 {/* Price Summary */}
                 <div className="mb-6">
-                  <div className="p-4 rounded-xl border-2 border-[#FACC15]/50 bg-gradient-to-br from-[#FACC15]/10 to-[#F97316]/5">
-                    <div className="text-center">
-                      <h4 className="text-white font-semibold text-sm mb-2">
+                  <div className="relative p-5 rounded-2xl border-2 border-[#FACC15]/50 bg-gradient-to-br from-[#FACC15]/10 via-[#F97316]/5 to-transparent overflow-hidden">
+                    {/* Animated Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#FACC15]/10 via-[#F97316]/10 to-[#FACC15]/10 animate-pulse" />
+                    
+                    <div className="relative z-10 text-center">
+                      <h4 className="text-white font-black text-base mb-3 tracking-wide">
                         {getPriceLabel()}
                       </h4>
-                      <div className="space-y-1 text-xs text-gray-300 mb-3">
-                        <div className="flex justify-between">
-                          <span>Base Price:</span>
-                          <span>₹{calculatePrice() - (includeGoodies ? 400 : 0)}</span>
+                      <div className="space-y-2 text-sm text-gray-300 mb-3">
+                        <div className="flex justify-between items-center py-1.5 border-b border-white/10">
+                          <span className="font-medium">Base Price:</span>
+                          <span className="font-bold text-white">₹{calculatePrice() - (includeGoodies ? 400 : 0)}</span>
                         </div>
                         {includeGoodies && (
-                          <div className="flex justify-between">
-                            <span>Goodies:</span>
-                            <span>+₹400</span>
+                          <div className="flex justify-between items-center py-1.5 border-b border-white/10">
+                            <span className="font-medium flex items-center gap-1.5">
+                              <Sparkles className="h-3.5 w-3.5 text-[#FACC15]" />
+                              Goodies:
+                            </span>
+                            <span className="font-bold text-[#F97316]">+₹400</span>
                           </div>
                         )}
-                        <div className="border-t border-gray-600 pt-1 flex justify-between font-bold text-sm">
-                          <span className="text-white">Total:</span>
-                          <span className="text-[#FACC15]">₹{calculatePrice()}</span>
+                        <div className="pt-2 flex justify-between items-center">
+                          <span className="text-base font-black text-white">Total:</span>
+                          <span className="text-2xl font-black bg-gradient-to-r from-[#FACC15] via-[#F59E0B] to-[#F97316] bg-clip-text text-transparent">
+                            ₹{calculatePrice()}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -633,23 +801,28 @@ export default function RegistrationPopup({
                 </div>
 
                 {/* Register Button */}
-                <motion.button
-                  whileTap={{ scale: 0.98 }}
+                <m.button
+                  whileTap={{ scale: 0.97 }}
                   onClick={handleRegisterOnKonfHub}
-                  className="w-full py-4 rounded-xl font-bold bg-gradient-to-r from-[#FACC15] to-[#F97316] text-black transition-all touch-manipulation active:scale-95"
+                  className="relative w-full py-4 rounded-xl font-black text-base bg-gradient-to-r from-[#FACC15] via-[#F59E0B] to-[#F97316] text-black transition-all touch-manipulation active:scale-95 shadow-lg shadow-[#FACC15]/30 group overflow-hidden flex items-center justify-center"
                 >
-                  Register on KonfHub
-                  <ExternalLink className="inline-block ml-2 h-5 w-5" />
-                </motion.button>
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    Register on KonfHub
+                    <ExternalLink className="h-5 w-5 group-active:translate-x-1 group-active:-translate-y-1 transition-transform" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#F97316] via-[#F59E0B] to-[#FACC15] opacity-0 group-active:opacity-100 transition-opacity" />
+                </m.button>
 
-                <p className="text-center text-gray-500 text-xs mt-2">
+                <p className="text-center text-gray-500 text-xs mt-3 flex items-center justify-center gap-1">
+                  <span className="inline-block w-1.5 h-1.5 bg-green-500 rounded-full" />
                   Redirects to KonfHub for secure registration
                 </p>
               </div>
-            </motion.div>
+            </m.div>
           </>
         )}
-      </motion.div>
+      </m.div>
     </AnimatePresence>
+    </LazyMotion>
   );
 }

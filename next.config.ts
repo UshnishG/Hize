@@ -36,7 +36,7 @@ const nextConfig: NextConfig = {
   },
   // iOS Safari optimizations
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false,
     optimizePackageImports: ['framer-motion', 'lucide-react'],
   },
   // Performance optimizations

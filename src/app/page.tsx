@@ -28,11 +28,6 @@ const ScrollProgress = dynamic(() => import("@/components/ScrollProgress"), {
   loading: () => null
 })
 
-const EnhancedCountdown = dynamic(() => import("@/components/EnhancedCountdown"), {
-  ssr: false,
-  loading: () => <div className="h-24 sm:h-32 bg-gradient-to-r from-orange-600/10 to-orange-400/10 rounded-xl"></div>
-})
-
 // Only load magnetic cursor on desktop
 const MagneticCursor = dynamic(() => import("@/components/MagneticCursor"), {
   ssr: false,
@@ -506,17 +501,9 @@ export default function Home() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.6 }}
-          >
-            <EnhancedCountdown />
-          </motion.div>
-
-          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
             className="pt-12 flex flex-col items-center gap-4"
           >
             <motion.button
