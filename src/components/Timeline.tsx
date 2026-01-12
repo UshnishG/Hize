@@ -40,9 +40,9 @@ const timelineData: TimelineDay[] = [
     title: "Open Mic",
     subtitle: "Express Yourself",
     color: "purple-blue",
-    bgColor: "#8B5CF620", 
-    borderColor: "#7C3AED50", 
-    glowColor: "#7C3AED", 
+    bgColor: "#8B5CF620",
+    borderColor: "#7C3AED50",
+    glowColor: "#7C3AED",
     icon: Mic,
     position: { x: 0, y: 0 },
     events: [
@@ -84,24 +84,23 @@ const timelineData: TimelineDay[] = [
     title: "Conference Day",
     subtitle: "Knowledge & Networking",
     color: "orange-black",
-    bgColor: "#FB923C20", 
-    borderColor: "#EA580C50", 
-    glowColor: "#EA580C", 
+    bgColor: "#FB923C20",
+    borderColor: "#EA580C50",
+    glowColor: "#EA580C",
     icon: Users,
     position: { x: 0, y: 0 },
     events: [
       { time: "9:00 AM – 9:30 AM", label: "Registration", icon: Calendar },
       { time: "9:30 AM – 9:50 AM", label: "Guest Arrival", icon: Users },
       { time: "10:00 AM – 10:40 AM", label: "Inauguration", icon: Trophy },
-      { time: "10:40 AM – 11:00 AM", label: "Tea Break", icon: Coffee },
+      { time: "10:40 AM – 11:00 AM", label: "Tea Break & Networking", icon: Coffee },
       { time: "11:00 AM – 12:30 PM", label: "Panel Discussion", icon: Mic },
-      { time: "12:30 PM – 1:30 PM", label: "Lunch", icon: Coffee },
-      { time: "1:30 PM – 2:30 PM", label: "Tech Talk — Dr. Gayathri", icon: Lightbulb },
-      { time: "2:30 PM – 4:00 PM", label: "Online Quiz — Dr. H. R. Mohan", icon: Trophy },
-      { time: "4:00 PM – 4:30 PM", label: "Tea Break", icon: Coffee },
-      { time: "4:30 PM – 6:00 PM", label: "Coding Contest", icon: Code },
-      { time: "6:00 PM – 8:00 PM", label: "Culturals", icon: Users },
-      { time: "8:00 PM – 9:00 PM", label: "Dinner", icon: Coffee },
+      { time: "12:30 PM – 1:30 PM", label: "Tech Talk", icon: Lightbulb },
+      { time: "1:30 PM – 2:30 PM", label: "Lunch", icon: Coffee },
+      { time: "2:30 PM – 4:00 PM", label: "Quiz Finale | Coding Contest", icon: Code },
+      { time: "4:00 PM – 4:30 PM", label: "Tea Break & Networking", icon: Coffee },
+      { time: "4:30 PM – 6:00 PM", label: "Tech Talk", icon: Lightbulb },
+      { time: "6:00 PM – 7:30 PM", label: "Culturals", icon: Users },
     ],
   },
   {
@@ -110,21 +109,20 @@ const timelineData: TimelineDay[] = [
     title: "Workshops & Showcase",
     subtitle: "Skills & Innovation",
     color: "black-orange",
-    bgColor: "#00000030", 
-    borderColor: "#EA580C50", 
-    glowColor: "#EA580C", 
+    bgColor: "#00000030",
+    borderColor: "#EA580C50",
+    glowColor: "#EA580C",
     icon: Lightbulb,
     position: { x: 0, y: 0 },
     events: [
-      { time: "8:00 AM – 10:30 AM", label: "Workshop", icon: Code },
-      { time: "10:30 AM – 11:00 AM", label: "Tea Break", icon: Coffee },
-      { time: "10:30 AM – 1:00 PM", label: "Startup Showcase", icon: Trophy },
-      { time: "11:00 AM – 12:30 PM", label: "Tech Talk 1 — Shivam Shivam", icon: Lightbulb },
-      { time: "12:30 PM – 1:30 PM", label: "Lunch", icon: Coffee },
-      { time: "1:30 PM – 2:30 PM", label: "Tech Talk 2 — Mr. Balak Awasthy", icon: Lightbulb },
-      { time: "2:30 PM – 3:30 PM", label: "Tech Talk 3", icon: Lightbulb },
+      { time: "9:00 AM – 10:30 AM", label: "Tech Talk", icon: Lightbulb },
+      { time: "10:30 AM – 11:00 AM", label: "Tea Break & Networking", icon: Coffee },
+      { time: "11:00 AM – 12:30 PM", label: "Startup Showcase", icon: Trophy },
+      { time: "11:00 AM – 1:00 PM", label: "Tech Talk", icon: Lightbulb },
+      { time: "1:00 PM – 2:00 PM", label: "Lunch", icon: Coffee },
+      { time: "2:00 PM – 3:30 PM", label: "Tech Talk", icon: Lightbulb },
       { time: "2:30 PM – 3:30 PM", label: "Interview Fair", icon: Users },
-      { time: "3:30 PM – 4:30 PM", label: "Valedictory Ceremony", icon: Trophy },
+      { time: "3:30 PM Onwards", label: "Valedictory Ceremony", icon: Trophy },
     ],
   },
 ];
@@ -193,7 +191,7 @@ const Timeline = memo(function Timeline() {
       {/* Backgrounds omitted for brevity - same as original code */}
       {!mobile && (
         <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
-           {/* Re-add your original SVG path code here if needed */}
+          {/* Re-add your original SVG path code here if needed */}
         </svg>
       )}
 
@@ -277,10 +275,10 @@ const Timeline = memo(function Timeline() {
                       >
                         {/* Event List Header (Standard) */}
                         {!day.events.some(e => e.isHackathon) && (
-                           <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2 px-4 pt-2">
-                             <Calendar className="w-5 h-5" style={{ color: day.glowColor }} />
-                             Event Schedule
-                           </h4>
+                          <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2 px-4 pt-2">
+                            <Calendar className="w-5 h-5" style={{ color: day.glowColor }} />
+                            Event Schedule
+                          </h4>
                         )}
 
                         <div className="space-y-3">
@@ -297,9 +295,9 @@ const Timeline = memo(function Timeline() {
                                   {/* Spooky Animated Background */}
                                   <div className="absolute inset-0 bg-black z-0" />
                                   <div className="absolute inset-0 bg-gradient-to-t from-red-950/40 via-black to-black z-0" />
-                                  
+
                                   {/* Flickering Light Effect */}
-                                  <motion.div 
+                                  <motion.div
                                     className="absolute inset-0 bg-red-600/10 mix-blend-overlay z-0"
                                     animate={{ opacity: [0.1, 0.3, 0.1, 0.4, 0.1] }}
                                     transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
@@ -349,8 +347,8 @@ const Timeline = memo(function Timeline() {
                                     {event.hackathonButtonText && (
                                       <motion.button
                                         onClick={(e) => {
-                                            e.stopPropagation();
-                                            router.push('/hackathon');
+                                          e.stopPropagation();
+                                          router.push('/hackathon');
                                         }}
                                         className="relative mt-2 px-8 py-4 group/btn"
                                         whileHover={{ scale: 1.05 }}
@@ -358,12 +356,12 @@ const Timeline = memo(function Timeline() {
                                       >
                                         {/* Button Border / Glow */}
                                         <div className="absolute inset-0 border-2 border-red-700 rounded-lg opacity-80 group-hover/btn:opacity-100 group-hover/btn:border-red-500 transition-all duration-300 shadow-[0_0_10px_rgba(220,38,38,0.2)] group-hover/btn:shadow-[0_0_20px_rgba(220,38,38,0.6)]" />
-                                        
+
                                         {/* Inner Bevel line */}
                                         <div className="absolute inset-[3px] border border-red-900 rounded-md opacity-50" />
 
                                         {/* Text Styling - Mimicking the Title Card */}
-                                        <span 
+                                        <span
                                           className="relative z-10 block text-2xl md:text-3xl font-serif text-transparent bg-clip-text bg-gradient-to-b from-red-500 via-red-600 to-red-900 stroke-red-500"
                                           style={{
                                             textShadow: `
@@ -371,7 +369,7 @@ const Timeline = memo(function Timeline() {
                                               0 0 10px rgba(220, 38, 38, 0.8),
                                               0 2px 0px rgba(0,0,0,0.5)
                                             `,
-                                            fontFamily: 'serif', 
+                                            fontFamily: 'serif',
                                             fontWeight: 900,
                                             letterSpacing: '-0.02em',
                                             WebkitTextStroke: '1px #7f1d1d'
@@ -379,9 +377,9 @@ const Timeline = memo(function Timeline() {
                                         >
                                           THE UPSIDE DOWN
                                         </span>
-                                        
+
                                         {/* Top Bar Line (Signature Style) */}
-                                        <motion.div 
+                                        <motion.div
                                           className="absolute top-2 left-4 right-4 h-[2px] bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.8)]"
                                           initial={{ width: "0%" }}
                                           whileInView={{ width: "auto" }}
@@ -390,7 +388,7 @@ const Timeline = memo(function Timeline() {
                                       </motion.button>
                                     )}
                                   </div>
-                                  
+
                                   {/* Vines / Overlay Image (Optional - using CSS gradient to simulate vines) */}
                                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black via-transparent to-transparent z-10 pointer-events-none" />
                                 </motion.div>
